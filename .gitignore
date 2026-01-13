@@ -2,3 +2,4 @@ venv/
 .idea/
 *.tsv
 target/
+.DS_Store
