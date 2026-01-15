@@ -52,11 +52,12 @@ for BN in range(nBlock):
     out_tmp["Type"] = new_type
     out_tmp["Participant"] = participant_id
     out_tmp["Block"] = BN+1
-    out_tmp["Trial"] = np.arange(1, len(out_tmp)+1)
 
     if session == "training":
         out_tmp["Type"] = "Chord"
 
     out = pd.concat([out, out_tmp], ignore_index=True)
+
+out["Trial"] = np.arange(1, len(out)+1)
 
 out.to_csv(f"target/efcTMS_{session}_{participant_id}.csv", index=False)
