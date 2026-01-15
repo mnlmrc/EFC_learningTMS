@@ -1,13 +1,18 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('target/template.csv')
-
 rng = np.random.default_rng(7)
 
 participant_id = 100
-session = 'testing'
+session = 'training'
 nBlock = 10
+
+out = pd.DataFrame()
+
+if session == 'testing':
+    df = pd.read_csv('target/template.csv')
+elif session == 'training':
+    df = pd.read_csv(f'target/template_{participant_id}.csv')
 
 for BN in range(nBlock):
 
@@ -26,17 +31,17 @@ for BN in range(nBlock):
 
     # --- Shuffle block order (block integrity maintained) ---
     order = rng.permutation(len(blocks))
-    out = pd.concat([blocks[i] for i in order], ignore_index=True)
+    out_tmp = pd.concat([blocks[i] for i in order], ignore_index=True)
 
     # --- 2) Fully shuffle Prep_dur across ALL rows ---
-    prep = out["Prep_dur"].to_numpy().copy()
+    prep = out_tmp["Prep_dur"].to_numpy().copy()
     rng.shuffle(prep)
-    out["Prep_dur"] = prep
+    out_tmp["Prep_dur"] = prep
 
     # --- 3) Enforce Type constraint within each 5-row block ---
     # Rep1 always Chord; among Rep2-5 choose 2 or 3 to be TMS
     new_type = []
-    for i in range(0, len(out), 5):
+    for i in range(0, len(out_tmp), 5):
         types = ["Chord"] * 5
         n_tms = int(rng.choice([2, 3]))
         tms_pos = rng.choice([1, 2, 3, 4], size=n_tms, replace=False)  # positions for Rep2..5
@@ -44,12 +49,14 @@ for BN in range(nBlock):
             types[p] = "TMS"
         new_type.extend(types)
 
-    out["Type"] = new_type
-    out["Participant"] = participant_id
-    out["Block"] = BN+1
-    out["Trial"] = np.arange(1, len(out)+1)
+    out_tmp["Type"] = new_type
+    out_tmp["Participant"] = participant_id
+    out_tmp["Block"] = BN+1
+    out_tmp["Trial"] = np.arange(1, len(out_tmp)+1)
 
     if session == "training":
-        out["Type"] = "Chord"
+        out_tmp["Type"] = "Chord"
 
-    out.to_csv(f"target/efcTMS_{session}_{participant_id}_{BN+1}.csv", index=False)
+    out = pd.concat([out, out_tmp], ignore_index=True)
+
+out.to_csv(f"target/efcTMS_{session}_{participant_id}.csv", index=False)
