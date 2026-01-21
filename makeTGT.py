@@ -3,16 +3,13 @@ import pandas as pd
 
 rng = np.random.default_rng(7)
 
-participant_id = 100
-session = 'training'
+participant_id = 101
+session = 'testing'
 nBlock = 10
 
 out = pd.DataFrame()
 
-if session == 'testing':
-    df = pd.read_csv('target/template.csv')
-elif session == 'training':
-    df = pd.read_csv(f'target/template_{participant_id}.csv')
+df = pd.read_csv('target/template.csv')
 
 for BN in range(nBlock):
 
