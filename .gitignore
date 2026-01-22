@@ -3,3 +3,4 @@ venv/
 *.tsv
 target/
 .DS_Store
+__pycache__/
