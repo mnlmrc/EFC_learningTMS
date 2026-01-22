@@ -88,7 +88,8 @@ def main(args):
             'success': [],
             'MD': [],
             'ET': [],
-             **{ch: [] for ch in gl.channels}
+             **{ch: [] for ch in gl.channels},
+             **{ch + '_PRE': [] for ch in gl.channels}
         }
         force_tms = np.zeros((ntrial, len(gl.channels), 150))
         for tr in range(ntrial):
@@ -99,6 +100,7 @@ def main(args):
             holdTime = dat.loc[tr].Match_dur
             Type = dat.loc[tr].Type
             start_sample = int(np.floor(planTime * gl.sampling_rate))
+            pre = force[start_sample - int(.1 * gl.sampling_rate):start_sample].mean(axis=0)
             if Type=='Chord':
                 end_sample = force.shape[0] - int(np.floor(holdTime * gl.sampling_rate))
                 success = dat.loc[tr].Success == 'success'
@@ -116,6 +118,8 @@ def main(args):
                 success = np.nan
             for c, ch in enumerate(gl.channels):
                 out_dict[ch].append(force_pattern[c])
+            for c, ch in enumerate(gl.channels):
+                out_dict[ch + '_PRE'].append(pre[c])
             out_dict['MD'].append(MD)
             out_dict['ET'].append(ET)
             out_dict['participant_id'].append(args.sn)
