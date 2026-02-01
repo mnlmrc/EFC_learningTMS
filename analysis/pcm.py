@@ -39,9 +39,9 @@ def mle_correlation(file_list, x, y, x_pre=False, y_pre=False):
                    'part_vec': np.r_[part_vec, part_vec]}
 
         data = np.r_[x_g, y_g]
-        data = data - data.mean(axis=1, keepdims=True)
-        # data_prewhitened = prew_res_from_part_mean(data, obs_des['part_vec'])
-        Y.append(pcm.dataset.Dataset(data, obs_descriptors=obs_des))
+        data_pw = prew_res_from_part_mean(data, obs_des['part_vec'])
+        data_pw_c = data_pw - data_pw.mean(axis=1, keepdims=True)
+        Y.append(pcm.dataset.Dataset(data_pw_c, obs_descriptors=obs_des))
         G.append(pcm.est_G_crossval(
             Y[-1].measurements,
             Y[-1].obs_descriptors['cond_vec'],
@@ -125,7 +125,7 @@ def main(args):
         df.to_csv(os.path.join(save_path, 'corr_pre-vol.tsv'), sep='\t', index=False)
         np.save(os.path.join(save_path, 'G_obs.pre-vol.npy'), G)
     if args.what=='corr_pre-tms':
-        r_indiv, r_group, SNR, G = mle_correlation(file_list, 'TMS', 'TMS', y_pre=True)
+        r_indiv, r_group, SNR, G = mle_correlation(file_list, 'TMS', 'TMS', x_pre=True)
         df = pd.DataFrame()
         df['participant_id'] = args.sns
         df['r_indiv'] = r_indiv
