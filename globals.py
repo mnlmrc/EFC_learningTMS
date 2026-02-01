@@ -2,6 +2,8 @@
 
 baseDir = '/cifs/diedrichsen/data/Chord_exp/EFC_learningTMS'
 behavDir = 'behavioural'
+pcmDir  = 'pcm'
+rsaDir = 'RSA'
 sampling_rate = 100 # sampling rate in Hz
 
 channels = ['finger_1_force_x',	'finger_1_force_y',	'finger_1_force_z',
