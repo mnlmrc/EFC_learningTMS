@@ -50,7 +50,7 @@ def mle_correlation(file_list, x, y, x_pre=False, y_pre=False):
     _, theta = pcm.fit_model_individ(Y, Mflex, fixed_effect='block', fit_scale=False, verbose=False)
     _, theta_gr = pcm.fit_model_group(Y, Mflex, fixed_effect='block', fit_scale=True, verbose=False)
 
-    r_indiv, r_group, SNR = extract_mle_corr(Mflex, theta[0], theta_gr[0])
+    r_indiv, r_group, SNR = extract_mle_corr(Mflex, theta[0], theta_gr[0], cond_effect=True)
 
     return r_indiv, r_group, SNR, np.array(G)
 
@@ -89,6 +89,8 @@ def mle_correlation3(file_list):
             Y[-1].measurements,
             Y[-1].obs_descriptors['cond_vec'],
             Y[-1].obs_descriptors['part_vec'])[0])
+
+        # subtract mean across chords
 
     return np.array(G)
 
