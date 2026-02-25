@@ -105,7 +105,7 @@ def main(args):
         path = os.path.join(gl.baseDir, gl.behavDir, f'p{args.sn}_testing')
         dat = pd.read_csv(os.path.join(path, f'efcTMS_testing_{args.sn}_output.csv'))
         ntrial = dat.shape[0]
-        force_tms = []
+        force_tms, force_exec = [], []
         for tr in range(ntrial):
             print(f'Processing trial {tr + 1}...')
             trial_data = pd.read_csv(os.path.join(path, 'raw_data', f'p{args.sn}_trial{tr + 1}.csv'))
@@ -114,11 +114,11 @@ def main(args):
             Type = dat.loc[tr].Type
             start_sample = int(np.floor(planTime * gl.sampling_rate))
             if Type=='TMS':
-                forceAbs = np.abs(force[start_sample:])
-                peakLoc = np.argmax(forceAbs[:50], axis=0) + start_sample
-                force_pattern = force[peakLoc, np.arange(force.shape[1])]
                 force_tms.append(force[start_sample:start_sample + 50].T)
+            if Type=='Chord':
+                force_exec.append(force[start_sample:start_sample + 100].T)
         np.save(os.path.join(path, 'forceTMS.npy'), np.array(force_tms))
+        np.save(os.path.join(path, 'forceExec.npy'), np.array(force_exec))
 
 
 
