@@ -1,6 +1,9 @@
-
+import os
 
 baseDir = '/cifs/diedrichsen/data/Chord_exp/EFC_learningTMS'
+if not os.path.exists(baseDir):
+    baseDir = '/Volumes/diedrichsen_data$/data/Chord_exp/EFC_learningTMS'
+
 behavDir = 'behavioural'
 pcmDir  = 'pcm'
 rsaDir = 'RSA'
