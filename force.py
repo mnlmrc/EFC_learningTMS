@@ -116,7 +116,7 @@ def main(args):
             if Type=='TMS':
                 force_tms.append(force[start_sample:start_sample + 50].T)
             if Type=='Chord':
-                force_exec.append(force[start_sample:start_sample + 100].T)
+                force_exec.append(force[-50:].T)
         np.save(os.path.join(path, 'forceTMS.npy'), np.array(force_tms))
         np.save(os.path.join(path, 'forceExec.npy'), np.array(force_exec))
 
